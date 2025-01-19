@@ -30,4 +30,23 @@ foodRoutes.get('/', async (req, res) => {
   }
 });
 
+foodRoutes.get('/search?', async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    let searchData = {};
+
+    if(name) {
+      searchData.name = { $regex: name, $options: 'i' };
+    }
+
+    const data = await Food.find(searchData);
+
+    res.status(200).json(data);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server error' });
+  }
+});
+
 export default foodRoutes;
